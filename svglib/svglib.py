@@ -82,11 +82,24 @@ def find_font(font_name):
 
     NOT_FOUND = (None, False)
     try:
+        # See issue https://github.com/deeplook/svglib/issues/226
+        # Try to register the font as a ttc with a subfontIndex specified after the '#'.
+        result = re.match(r'(.*)#(.+)', font_name)
+        if result != None:
+            fn = result.group(1)
+            sfi = result.group(2)
+            registerFont(TTFont(font_name, '%s.ttc' % fn, subfontIndex=sfi))
         # Try first to register the font if it exists as ttf,
         # based on ReportLab font search.
-        registerFont(TTFont(font_name, '%s.ttf' % font_name))
+        else:
+            registerFont(TTFont(font_name, '%s.ttf' % font_name))
         _registered_fonts[font_name] = True
         return font_name, True
+
+        # For temporary hack
+        # registerFont(TTFont(font_name, '%s.ttc' % font_name))
+        # _registered_fonts[font_name] = True
+        # return font_name, True
     except TTFError:
         # Try searching with Fontconfig
         try:
