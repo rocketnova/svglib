@@ -95,11 +95,6 @@ def find_font(font_name):
             registerFont(TTFont(font_name, '%s.ttf' % font_name))
         _registered_fonts[font_name] = True
         return font_name, True
-
-        # For temporary hack
-        # registerFont(TTFont(font_name, '%s.ttc' % font_name))
-        # _registered_fonts[font_name] = True
-        # return font_name, True
     except TTFError:
         # Try searching with Fontconfig
         try:
